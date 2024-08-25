@@ -58,3 +58,20 @@ describe('getProduct', () => {
     expect(result).toHaveProperty('id', 1);
   });
 });
+
+describe('registerUser', () => {
+  // it('should throw an error if username is falsy', () => {
+  //   // Falsy values: null, undefined, NaN, '', 0, false
+  //   const args = [null, undefined, NaN, '', 0, false];
+  //   args.forEach(arg => expect(() => lib.registerUser(arg)).toThrow());
+  // });
+  it.each([null, undefined, NaN, '', 0, false])('should throw an error if username is %s', (arg) => {
+    expect(() => lib.registerUser(arg)).toThrow();
+  });
+  
+  it('should return a user object if a valid username is supplied', () => {
+    const result = lib.registerUser('bela-jash');
+    expect(result).toMatchObject({username: 'bela-jash'});
+    expect(result.id).toBeGreaterThan(0);
+  });
+});
