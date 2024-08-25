@@ -93,17 +93,31 @@ describe('applyDiscount', () => {
 
 describe('notifyCustomer', () => {
   it('should send an email to the customer', () => {
-    db.getCustomerSync = function(id) {
-      return {email: 'a'};
-    }
+    // const mockFunction = jest.fn();
+    // mockFunction.mockReturnValue(1);
+    // mockFunction.mockResolvedValue(1);
+    // mockFunction.mockRejectedValue(new Error('Rejected error'));
+    // const result = mockFunction();
     
-    let mailSent = false;
-    mail.send = function(email, message) {
-      mailSent = true;
-    }
-    
+    db.getCustomerSync = jest.fn().mockReturnValue({email: 'a'});
+    mail.send = jest.fn();
     lib.notifyCustomer({customerId: 1});
+    expect(mail.send).toHaveBeenCalled();
+    expect(mail.send).toHaveBeenCalledWith('a', 'Your order was placed successfully.'); // It needs exact values, hence too specific.
+    expect(mail.send.mock.calls[0][0]).toBe('a'); // mail.send.mock.calls[firstCallToTheMethod][firstArgument]
+    expect(mail.send.mock.calls[0][1]).toMatch(/order/); // mail.send.mock.calls[firstCallToTheMethod][secondArgument]
     
-    expect(mailSent).toBe(true);
+    // db.getCustomerSync = function(id) {
+    //   return {email: 'a'};
+    // }
+    //
+    // let mailSent = false;
+    // mail.send = function(email, message) {
+    //   mailSent = true;
+    // }
+    //
+    // lib.notifyCustomer({customerId: 1});
+    //
+    // expect(mailSent).toBe(true);
   });
 });
